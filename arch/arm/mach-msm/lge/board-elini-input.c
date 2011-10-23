@@ -104,28 +104,14 @@ extern int msm_hsusb_detect_chg_type(void);
 static int elini_gpio_slide_input_func(struct input_dev *input_dev,
                         struct gpio_event_info *info, void **data, int func)
 {
-        int mUsbOnline = 0;
 #if defined (CONFIG_LGE_SUPPORT_AT_CMD)
         at_cmd_hall_ic = input_dev;
 #endif /* add val for C710 AT_CMD */
 
         if (func == GPIO_EVENT_FUNC_INIT)
         {
-// LGE_MODIFY_S kwangrim.ha@lge.com 2010.12.22 L04C slide enable when usb connected        
-	    mUsbOnline = msm_hsusb_detect_chg_type();
-	    if(mUsbOnline == 0 /* USB_CHARGER_TYPE_USB_PC */)
-          {
                 gpio_tlmm_config(GPIO_CFG(GPIO_HALLIC_IRQ, 0, GPIO_INPUT, GPIO_PULL_UP,
                                         GPIO_2MA), GPIO_ENABLE);
-          }
-// LGE_MODIFY_E kwangrim.ha@lge.com 2010.12.22 L04C slide enable when usb connected		
-          else
-          {
-// LGE_MODIFY_S kwangrim.ha@lge.com 2010.11.05 L04C kernel mod
-                gpio_tlmm_config(GPIO_CFG(GPIO_HALLIC_IRQ, 0, GPIO_INPUT, GPIO_PULL_UP,
-                                        GPIO_2MA), GPIO_DISABLE);
-// LGE_MODIFY_E kwangrim.ha@lge.com 2010.11.05 L04C kernel mode
-          }
       	 }
 
         return gpio_event_input_func(input_dev, info, data, func);
